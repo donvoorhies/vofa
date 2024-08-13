@@ -1,0 +1,111 @@
+/*
+Theme Name: Vofa
+Theme URI: https://github.com/donvoorhies/vofa
+Author: Don Voorhies
+Author URI: https://github.com/donvoorhies/vofa
+Description: A lightweight, fast, responsive and no-fuss theme for your WordPress installation. (Thanks goes to Uri Flash - for the spark...!)
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: flash-theme
+*/
+
+/* Basic Styles */
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+html,body{height:100%;margin:0}
+body{font:16px 'Open Sans',Arial,sans-serif;margin:0 auto;padding:0;line-height:1.6;color:#333;background-color:#FFF;width:95%;max-width:100%}
+/*
+The following selector is to remove the header/page-headline on the start-page (HINT:display:none); 
+if something simlar is desired done on your start-page, find the id-number which your start-page has gotten allocated, and use this id-number instead in the 
+"page-id-18"-attribute... */
+body.page-id-18 main header{display:none}
+
+/* Fade Transition Styles */
+body.fade-out{opacity:0;transition:opacity 0.5s ease-in-out}
+body.fade-in{opacity: 1;transition:opacity 0.5s ease-in-out}
+
+header, nav, nav div.menu-menu-container,ul#menu-menu,main,article,section.featured-content, section.recent-posts,footer,div.push{margin:0 auto;width:95%;max-width:100%}
+a,a:active,a:visited{color:#000;text-decoration:none}
+a:hover{color:#005177}
+
+/* Header Styles */
+header{background-color:#FFF;color:#333;padding:1rem 0;text-align:left;position: relative;border-bottom:1px solid #CCC}
+header h1 a{margin:0;font-size:2.5rem;color:#333}
+header p{margin:0;font-size:1.2rem}
+
+/* Navigation Styles */
+nav{background-color:#FFF;color:#333;padding:0.5rem;text-align:center;list-style-type: none;width:calc(95% - 1rem)}
+nav a{color:#333;text-decoration:none;margin: 0 0.5rem}
+nav a:hover{text-decoration:underline}
+nav ul li{display:inline;text-decoration:none}
+
+/* Programatical-magic that initiallly makes the hamburger menu disappear */
+#menu{display:none}
+
+/* Main Content Styles; change margin-height to a negative, but matcing value to footer height */
+main{padding:1rem;background-color:#FFF;/*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/min-height:100%;margin-bottom:-24px;width:calc(95% - 2rem)}
+main h2{font-size:2rem;margin-bottom:1rem;color:#333;border-bottom:2px solid #000;padding-bottom:0.5rem}
+main article{margin-bottom:2rem}
+main article h3{font-size:1.5rem;margin-bottom:0.5rem}
+main article p {margin-bottom:1rem}
+main section article header{border-bottom:0 none}
+article.article-full header {width:100%;max-width:100%}
+
+
+/*For forms used - and the like*/
+input,textarea{width:95%;max-width:100%; margin:0 auto}
+p input.wpcf7-submit{width:95px}
+
+/*Embedded media 'n' stuff*/
+img{border:0;height:auto;max-width:100%} 
+/* Remeber to plot in the IMG-file's width! */
+
+iframe{width:100%,max-width:100%}
+
+/* Remeber to add 'class="yt"' in the iframe-tag using a HTML-block in Guttenberg! */
+iframe.yt,video{aspect-ratio:16 / 9;height:100%;width:100%;max-width:100%;margin:0 auto}
+
+/* Sidebar Styles */
+.homepage-widgets{margin-top:2rem;display:flex;flex-wrap:wrap}
+.widget{padding:1rem;border:1px solid #ddd;margin-bottom: 1.5rem;flex: 1 1 calc(33.333% - 2rem);box-sizing:border-box}
+.widget-title{margin-bottom:1rem;font-size:1.2rem;border-bottom:2px solid #000;padding-bottom: 0.5rem}
+
+/*For Sticky-Footer - change the 'height'-attribute to alter footer-height...*/
+div.push{height:24px}
+
+/* Footer Styles; change 'height'-attribute (AGAIN!) to alter footer-height...*/
+footer{background-color:#FFF;color:#333;text-align:center;padding:1rem 0;position:relative;width:95%;max-width:100%;margin:0 auto;height:24px;line-height:24px}
+footer p{margin:0;font-size:0.9rem}
+footer nav{margin-top:1rem}
+footer nav a{margin:0 0.5rem}
+
+/* Featured Content and Recent Posts */
+.featured-content,.recent-posts{margin-bottom:2rem}
+.featured-content h2,.recent-posts h2{border-bottom:2px solid #000;padding-bottom:0.5rem}
+.featured-content article,.recent-posts article{margin-bottom:1.5rem}
+
+/* Clearfix */
+.cf:before,.cf:after{content: " ";display:table}
+.cf:after{clear:both}
+/*Planked from Nicolas Gallagher - https://nicolasgallagher.com/micro-clearfix-hack/*/
+
+/* Removes ReCaptcha-badge - handy, if you use Contact Form 7! */
+.grecaptcha-badge{visibility:hidden}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+header{background-color:#FFF;color:#333;padding:1rem 0;text-align:center;position:relative}
+figcaption.wp-element-caption{text-align:center;font-size:0.75em}
+/* Programa tical-magic that makes the nav-bar vanish and gets the hamburger menu to appear on small-screens (along with the help of jQuery and some plugin-code)! */
+div#menu{border:1px solid #333}
+#menu, #menu a, nav ul li a{display:block;width:45px;height:45px;line-height:45px;float:rtion.ight;font-size:2em;z-index:1000;text-align:left}
+#menu a:hover, nav ul li a:hover{color:#FFF;background:#000}
+#menu,#menu a{text-align:center}
+nav{display:none;text-align:left}
+ul{padding:0}
+nav ul li, nav ul li:hover{display:block;height:45px;line-height:45px;max-width:100%;width:100%;margin-left:0}
+nav ul li a{display:block;height:45px;line-height:45px;max-width:100%;width:100%;margin-left:0;font-size:16px;text-decoration:none}
+nav ul li a:hover{color:#fff;background:#333;text-decoration:none}
+nav ul li:first-child{border-bottom: 0 none}
+.widget{flex: 1 1 100%}
+}
