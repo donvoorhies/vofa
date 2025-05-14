@@ -143,18 +143,36 @@ add_action('init', 'add_main_nav');
 Enqueue Web Font Loader and load Open Sans font
 (https://github.com/typekit/webfontloader)
 */
+/**
+ * Improved Open Sans font loader using WebFontLoader
+ * 
+ * - Uses proper versioning for the WebFontLoader script
+ * - Uses standard function syntax for better browser compatibility
+ * - Checks sessionStorage before loading fonts to avoid unnecessary reloads
+ * - Adds comments for better maintainability
+ */
 function open_sans_font_loader_enqueue_scripts() {
-    wp_enqueue_script('webfontloader', 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js', array(), null, true);
-
+    // Enqueue the WebFontLoader library with version number
+    wp_enqueue_script('webfontloader', 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js', array(), '1.6.28', true);
+    
+    // Add inline script to load fonts and check sessionStorage
     wp_add_inline_script('webfontloader', '
-        WebFont.load({
-            google: {
-                families: ["Open+Sans:400,700&display=swap"]
-            },
- active: () => {
-                    sessionStorage.fontsLoaded = true
+        // Check if fonts are already loaded in this session
+        if (!sessionStorage.fontsLoaded) {
+            WebFont.load({
+                google: {
+                    families: ["Open+Sans:400,700&display=swap"]
                 },
-        });
+                active: function() {
+                    // Mark fonts as loaded in sessionStorage
+                    sessionStorage.fontsLoaded = true;
+                    console.log("Open Sans font loaded successfully");
+                },
+                inactive: function() {
+                    console.log("Could not load Open Sans font");
+                }
+            });
+        }
     ');
 }
 add_action('wp_enqueue_scripts', 'open_sans_font_loader_enqueue_scripts');
