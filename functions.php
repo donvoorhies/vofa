@@ -1,309 +1,314 @@
 <?php
-/*! 
-Prevents WordPress from testing ssl capability on domain.com/xmlrpc.php?rsd 
-#Speed-optimization 
-*/
-remove_filter('atom_service_url','atom_service_url_filter');
-
-/*! 
-Remove version info from head and feeds 
-#Security/Hardening 
-*/
-add_filter('the_generator', 'complete_version_removal');
-function complete_version_removal() {
-    return '';
-}
-/*! 
-Remove unnecessary wp_head actions 
-#Optimization
-*/
-add_action('init', 'optimize_head');
-    function optimize_head() {
-        remove_action('wp_head', 'rsd_link');
-        remove_action('wp_head', 'wlwmanifest_link');
-        remove_action('wp_head', 'wp_generator');
-        remove_action('wp_head', 'start_post_rel_link');
-        remove_action('wp_head', 'index_rel_link');
-        remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
-    }
-
-/*!
-Disabling pingback and trackback notifications
-#Optimization
-*/
-add_action( 'pre_ping', 'wp_internal_pingbacks' );
-add_filter( 'wp_headers', 'wp_x_pingback');
-add_filter( 'bloginfo_url', 'wp_pingback_url') ;
-add_filter( 'bloginfo', 'wp_pingback_url') ;
-add_filter( 'xmlrpc_enabled', '__return_false' );
-add_filter( 'xmlrpc_methods', 'wp_xmlrpc_methods' );
-
-/*! 
-Disable internal pingbacks
-*/
-function wp_internal_pingbacks( &$links ) { 
-    foreach ( $links as $l => $link ) {
-        if ( 0 === strpos( $link, get_option( 'home' ) ) ) {
-            unset( $links[$l] );
-        }
-    }
-}
-
-/*! 
-Disable x-pingback
-*/
-function wp_x_pingback( $headers ) { 
-    unset( $headers['X-Pingback'] );
-    return $headers;
-}
-
-/*! 
-Remove pingback URLs
-*/
-function wp_pingback_url( $output, $show='') { 
-    if ( $show == 'pingback_url' ) $output = '';
-    return $output;
-}
-
-/*! 
-Disable XML-RPC methods 
-*/
-function wp_xmlrpc_methods( $methods ) { 
-    unset( $methods['pingback.ping'] );
-    return $methods;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*! 
-Disbable Self-Pingbacks 
-*/
-add_action( 'pre_ping', 'wpsites_disable_self_pingbacks' );
-function wpsites_disable_self_pingbacks( &$links ) {
- foreach ( $links as $l => $link )
- if ( 0 === strpos( $link, get_option( 'home' ) ) )
- unset($links[$l]);
-}
-
-/*! 
-Removes wp-version number params (scopes) from scripts and styles
-This code-block has replaced a previously used code, as it's deemed more efficient/-plays well with the rest of the code.
-*/
-	
-add_filter( 'style_loader_src', 'remove_css_js_version', 9999 );
-add_filter( 'script_loader_src', 'remove_css_js_version', 9999 );	
-function remove_css_js_version( $src ) {
-    if( strpos( $src, '?ver=' ) )
-        $src = remove_query_arg( 'ver', $src );
-    return $src;
-}
-
-/*!
-Move all enqueued scripts to the footer to improve page load speed
-*/
-add_action('wp_enqueue_scripts', 'doa_move_scripts_to_footer');
-function doa_move_scripts_to_footer() {
-    remove_action('wp_head', 'wp_print_scripts');
-    remove_action('wp_head', 'wp_print_head_scripts', 9);
-    remove_action('wp_head', 'wp_enqueue_scripts', 1);
-
-    add_action('wp_footer', 'wp_print_scripts', 5);
-    add_action('wp_footer', 'wp_enqueue_scripts', 5);
-    add_action('wp_footer', 'wp_print_head_scripts', 5);
-}
-
-
-
-/*! 
-Register a new sidebar
-*/
-function add_widget_support() {
-    register_sidebar(array(
-        'name'          => 'Sidebar',
-        'id'            => 'sidebar',
-        'before_widget' => '<div>',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h2>',
-        'after_title'   => '</h2>',
-    ));
-}
-add_action('widgets_init', 'add_widget_support');
-
-/*
-Register a new navigation menu
-*/
-function add_main_nav() {
-    register_nav_menu('header-menu', __('Header Menu'));
-}
-add_action('init', 'add_main_nav');
-
-
-
-/*!
-Enqueue Web Font Loader and load Open Sans font
-(https://github.com/typekit/webfontloader)
-*/
 /**
- * Improved Open Sans font loader using WebFontLoader
- * 
- * - Uses proper versioning for the WebFontLoader script
- * - Uses standard function syntax for better browser compatibility
- * - Checks sessionStorage before loading fonts to avoid unnecessary reloads
- * - Adds comments for better maintainability
+ * Theme functions and definitions
+ *
+ * @package Vofa
  */
-function open_sans_font_loader_enqueue_scripts() {
-    // Enqueue the WebFontLoader library with version number
-    wp_enqueue_script('webfontloader', 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js', array(), '1.6.28', true);
-    
-    // Add inline script to load fonts and check sessionStorage
-    wp_add_inline_script('webfontloader', '
-        // Check if fonts are already loaded in this session
-        if (!sessionStorage.fontsLoaded) {
-            WebFont.load({
-                google: {
-                    families: ["Open+Sans:400,700&display=swap"]
-                },
-                active: function() {
-                    // Mark fonts as loaded in sessionStorage
-                    sessionStorage.fontsLoaded = true;
-                    console.log("Open Sans font loaded successfully");
-                },
-                inactive: function() {
-                    console.log("Could not load Open Sans font");
-                }
-            });
-        }
-    ');
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
-add_action('wp_enqueue_scripts', 'open_sans_font_loader_enqueue_scripts');
 
-/*!
-Enqueue loadCSS and add inline script to load stylesheets asynchronously
-(https://github.com/filamentgroup/loadCSS)
-*/
-function enqueue_loadcss() {
-    wp_register_script('loadcss', 'https://cdnjs.cloudflare.com/ajax/libs/loadCSS/3.1.0/loadCSS.min.js', array(), '3.1.0', true);
-    wp_enqueue_script('loadcss');
-    $normalize_url = 'https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css';
-    /*$cf7_url = 'https://wordpress19.voorhies.dk/wp-content/plugins/contact-form-7/includes/css/styles.css';*/
-/**If you do NOT use Contact Form 7, then either leave the string above commented or remove - otherwise remove the comments if the oppostie is the case*/
-    $main_stylesheet_url = get_stylesheet_uri();
-    $block_stylesheet_url = 'https://wordpress19.voorhies.dk/wp-includes/css/dist/block-library/style.min.css';
+/**
+ * Theme Setup
+ * - Registers theme supports, navigation menus.
+ */
+function Vofa_setup() {
+	// Add support for title tag, letting WordPress manage the document title.
+	add_theme_support( 'title-tag' );
 
-    $inline_script = "
-        function onloadCSS(ss, callback) {
-            ss.onload = function() {
-                ss.onload = null;
-                if (callback) {
-                    callback.call(ss);
-                }
-            };
-            if ('isApplicationInstalled' in ss) {
-                if (callback) {
-                    callback.call(ss);
-                }
+	// Add support for post thumbnails (featured images).
+	add_theme_support( 'post-thumbnails' );
+
+	// Register navigation menus.
+	register_nav_menus(
+		array(
+			'header-menu' => __( 'Header Menu', 'Vofa' ),
+			'main-menu'   => __( 'Main Menu', 'Vofa' ), // Assuming 'main-menu' is distinct from 'header-menu'
+			'footer-menu' => __( 'Footer Menu', 'Vofa' ),
+		)
+	);
+}
+add_action( 'after_setup_theme', 'Vofa_setup' );
+
+/**
+ * Enqueue styles and scripts for the theme.
+ */
+function Vofa_enqueue_assets() {
+	// Enqueue main stylesheet.
+	wp_enqueue_style( 'flash-theme-style', get_stylesheet_uri(), array(), wp_get_theme()->get( 'Version' ) );
+
+	// Enqueue fade transition script in the footer.
+	wp_enqueue_script( 'fade-transition', get_template_directory_uri() . '/fade-transition.js', array(), wp_get_theme()->get( 'Version' ), true );
+}
+add_action( 'wp_enqueue_scripts', 'Vofa_enqueue_assets' );
+
+
+/**
+ * Register widget areas.
+ */
+function Vofa_widgets_init() {
+	// Primary Sidebar
+	register_sidebar(
+		array(
+			'name'          => __( 'Sidebar', 'flash-theme' ),
+			'id'            => 'sidebar',
+			'description'   => __( 'Main sidebar appearing on posts and pages.', 'flash-theme' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	// Homepage Widget Area
+	register_sidebar(
+		array(
+			'name'          => __( 'Homepage Widget Area', 'flash-theme' ),
+			'id'            => 'homepage-widget-area',
+			'description'   => __( 'Widget area specifically for the homepage.', 'flash-theme' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+}
+add_action( 'widgets_init', 'Vofa_widgets_init' );
+
+// --- WordPress Optimizations & Hardening ---
+
+/**
+ * Remove WordPress version information from head and feeds for security.
+ */
+if ( ! function_exists( 'Vofa_remove_wp_version_info' ) ) {
+	function Vofa_remove_wp_version_info() {
+		return '';
+	}
+}
+add_filter( 'the_generator', 'Vofa_remove_wp_version_info' );
+
+/**
+ * Remove unnecessary wp_head actions for optimization and minor security.
+ * These actions are typically only output on the front-end.
+ */
+if ( ! function_exists( 'Vofa_optimize_wp_head' ) ) {
+	function Vofa_optimize_wp_head() {
+		remove_action( 'wp_head', 'rsd_link' ); // Really Simple Discovery link.
+		remove_action( 'wp_head', 'wlwmanifest_link' ); // Windows Live Writer manifest link.
+		remove_action( 'wp_head', 'wp_generator' ); // WordPress version.
+		remove_action( 'wp_head', 'start_post_rel_link' ); // Link to start post. Deprecated.
+		remove_action( 'wp_head', 'index_rel_link' ); // Link to site index.
+		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head' ); // Links for next/previous posts. Deprecated.
+		// Note: The 'atom_service_url_filter' line from original code was removed as 'atom_service_url_filter' is not a standard WP callback.
+		// Disabling XML-RPC (see below) is more effective for RSD if XML-RPC is not needed.
+	}
+}
+add_action( 'init', 'Vofa_optimize_wp_head' );
+
+
+/**
+ * Disable XML-RPC interface.
+ * XML-RPC can be a target for attacks if not used. Consider if you need it for remote publishing or specific plugins.
+ */
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+/**
+ * Unset specific XML-RPC methods (less critical if xmlrpc_enabled is false, but good for defense in depth).
+ */
+if ( ! function_exists( 'Vofa_disable_xmlrpc_methods' ) ) {
+	function Vofa_disable_xmlrpc_methods( $methods ) {
+		unset( $methods['pingback.ping'] ); // Disable pingbacks via XML-RPC.
+		// unset( $methods['another.method'] ); // Example: To disable other specific methods if XML-RPC were partially enabled.
+		return $methods;
+	}
+}
+// This filter might not run if xmlrpc_enabled is already false, but it's here for completeness.
+add_filter( 'xmlrpc_methods', 'Vofa_disable_xmlrpc_methods' );
+
+
+/**
+ * Disable self-pingbacks (pinging your own site).
+ */
+if ( ! function_exists( 'Vofa_disable_self_pingbacks' ) ) {
+	function Vofa_disable_self_pingbacks( &$links ) {
+		$home_url = get_option( 'home' );
+		foreach ( $links as $l => $link ) {
+			if ( 0 === strpos( $link, $home_url ) ) {
+				unset( $links[ $l ] );
+			}
+		}
+	}
+}
+add_action( 'pre_ping', 'Vofa_disable_self_pingbacks' );
+
+/**
+ * Remove X-Pingback header from HTTP headers.
+ */
+if ( ! function_exists( 'Vofa_remove_x_pingback_header' ) ) {
+	function Vofa_remove_x_pingback_header( $headers ) {
+		unset( $headers['X-Pingback'] );
+		return $headers;
+	}
+}
+add_filter( 'wp_headers', 'Vofa_remove_x_pingback_header' );
+
+/**
+ * Remove pingback URL from bloginfo.
+ */
+if ( ! function_exists( 'Vofa_remove_pingback_url_bloginfo' ) ) {
+	function Vofa_remove_pingback_url_bloginfo( $output, $show ) {
+		if ( 'pingback_url' === $show ) {
+			$output = '';
+		}
+		return $output;
+	}
+}
+// This primarily targets get_bloginfo('pingback_url').
+add_filter( 'bloginfo_url', 'Vofa_remove_pingback_url_bloginfo', 10, 2 );
+// The filter on 'bloginfo' might be redundant if the above covers all cases, but kept from original for now.
+add_filter( 'bloginfo', 'Vofa_remove_pingback_url_bloginfo', 10, 2 );
+
+
+/**
+ * Remove version parameters from CSS and JS files.
+ * Caution: This can affect browser caching if file contents change but filenames don't.
+ * WordPress uses version parameters for cache-busting.
+ */
+if ( ! function_exists( 'Vofa_remove_asset_version_params' ) ) {
+	function Vofa_remove_asset_version_params( $src ) {
+		if ( strpos( $src, '?ver=' ) ) {
+			$src = remove_query_arg( 'ver', $src );
+		}
+		return $src;
+	}
+}
+add_filter( 'style_loader_src', 'Vofa_remove_asset_version_params', 9999 );
+add_filter( 'script_loader_src', 'Vofa_remove_asset_version_params', 9999 );
+
+
+/**
+ * Note on Moving Scripts to Footer:
+ * The original code had a function 'doa_move_scripts_to_footer' that attempted to force all scripts
+ * to the footer by re-hooking 'wp_enqueue_scripts'. This is highly problematic and can break
+ * plugin functionality and WordPress core script loading.
+ *
+ * The correct way to load scripts in the footer is to use the $in_footer parameter (set to true)
+ * when calling wp_enqueue_script():
+ * e.g., wp_enqueue_script( 'my-script', 'path/script.js', array('jquery'), '1.0', true );
+ *
+ * Ensure all scripts enqueued by your theme use this method if they are safe to load in the footer.
+ */
+
+
+/**
+ * Load latest jQuery from CDN and deregister WordPress's version on the front-end.
+ * Includes a custom inline script.
+ * Caution: Replacing core jQuery can lead to plugin compatibility issues. Test thoroughly.
+ */
+if ( ! function_exists( 'Vofa_load_cdn_jquery' ) ) {
+	function Vofa_load_cdn_jquery() {
+		if ( ! is_admin() ) { // Only modify jQuery on the front-end.
+			wp_deregister_script( 'jquery-core' ); // Deregister WordPress's core jQuery.
+			wp_register_script( 'jquery-core', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js', array(), '3.7.1', true );
+
+			// WordPress uses 'jquery' as an alias for 'jquery-core'. Re-registering 'jquery' handle to point to the CDN version.
+			wp_deregister_script( 'jquery' );
+			wp_register_script( 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js', array(), '3.7.1', true );
+			
+			// Optional: Deregister jQuery Migrate if you are sure no plugins/theme parts need it.
+			// wp_deregister_script( 'jquery-migrate' );
+
+			// Custom inline script dependent on jQuery.
+			$custom_jquery_script = '
+				jQuery(document).ready(function($) {
+					// Safely use $ as an alias for jQuery within this function.
+					$("#menu").click(function() {
+						$("nav").slideToggle("slow");
+					});
+				});
+			';
+			// Add inline script after 'jquery' (our CDN jQuery) is enqueued.
+			wp_add_inline_script( 'jquery', $custom_jquery_script );
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'Vofa_load_cdn_jquery', 5 ); // Load early to replace before others enqueue.
+
+
+/**
+ * Enqueue WebFontLoader and load Open Sans font asynchronously.
+ * Uses sessionStorage to avoid reloading fonts within the same session.
+ */
+if ( ! function_exists( 'Vofa_enqueue_open_sans_webfontloader' ) ) {
+	function Vofa_enqueue_open_sans_webfontloader() {
+		// Enqueue the WebFontLoader library with version number, load in footer.
+		wp_enqueue_script( 'webfontloader', 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js', array(), '1.6.28', true );
+
+		// Add inline script to load fonts and check sessionStorage.
+		$webfont_loader_script = "
+            if (!sessionStorage.fontsLoadedFlashTheme) { // Use a theme-specific sessionStorage key
+                WebFont.load({
+                    google: {
+                        families: ['Open+Sans:400,700&display=swap']
+                    },
+                    active: function() {
+                        sessionStorage.fontsLoadedFlashTheme = true;
+                        // console.log('Open Sans font loaded successfully via WebFontLoader.'); // Optional: for debugging
+                    },
+                    inactive: function() {
+                        // console.log('Could not load Open Sans font via WebFontLoader.'); // Optional: for debugging
+                    }
+                });
+            } else {
+                // console.log('Open Sans font already loaded in this session (WebFontLoader).'); // Optional: for debugging
             }
-        }
-        /**var normalizeStylesheet = loadCSS('$normalize_url');
-	var cf7Stylesheet = loadCSS('$cf7_url')*/
- /**As earlier, if you do NOT use Contact Form 7, then either leave the strings above commented or remove - otherwise remove the comments if the oppostie is the case*/
-
-        var mainStylesheet = loadCSS('$main_stylesheet_url');
-		var blockStylesheet = loadCSS('$block_stylesheet_url');
-        
-		onloadCSS(normalizeStylesheet, function() {
-        console.log('Normalize.css has loaded.');
-        });
-		
-		/** onloadCSS(cf7Stylesheet, function() {
-		console.log('cf7.css has loaded.');
-        });*/
- /**As earlier, if you do NOT use Contact Form 7, then either leave the strings above commented or remove - otherwise remove the comments if the oppostie is the case*/
-
-		onloadCSS(mainStylesheet, function() {
-		console.log('Main stylesheet has loaded.');
-        });
-		
-		onloadCSS(blockStylesheet, function() {
-		console.log('Block stylesheet has loaded.');
-        });
-    ";
-    wp_add_inline_script('loadcss', $inline_script);
+        ";
+		wp_add_inline_script( 'webfontloader', $webfont_loader_script );
+	}
 }
-add_action('wp_enqueue_scripts', 'enqueue_loadcss');
-
-/*!
-Deregister default jQuery and load the latest version from Google CDN with custom script
-*/
-function load_latest_jquery() {
-    wp_deregister_script('jquery');
-    wp_enqueue_script('jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js', array(), null, true);
-
-    wp_add_inline_script('jquery', '
-        $(document).ready(function() {
-            $("#menu").click(function() {
-                $("nav").slideToggle("slow");
-            });
-        });
-    ');
-}
-add_action('wp_enqueue_scripts', 'load_latest_jquery');
+add_action( 'wp_enqueue_scripts', 'Vofa_enqueue_open_sans_webfontloader' );
 
 
-/*
- * function speed_optimizer_add_lazyload_to_images($content) {
-    // Check if we're on the index page
-    if (is_home()) {
-        // Do not modify the content on the index page
-        return $content;
-    }
-
-    // Add loading="lazy" to all other images
-    $content = preg_replace('/<img(.*?)src=/', '<img$1loading="lazy" src=', $content);
-    return $content;
-}
-
-add_filter('the_content', 'speed_optimizer_add_lazyload_to_images');
-add_filter('post_thumbnail_html', 'speed_optimizer_add_lazyload_to_images');
-add_filter('widget_text', 'speed_optimizer_add_lazyload_to_images');
-*/
+/**
+ * Note on Asynchronous CSS Loading (loadCSS):
+ * The original code had a commented-out section for 'enqueue_loadcss'.
+ * If you intend to load CSS asynchronously:
+ * 1. Avoid hardcoding URLs; use WordPress functions like plugins_url(), get_stylesheet_directory_uri().
+ * 2. For core stylesheets (like block-library), enqueue them via their handles: wp_enqueue_style('wp-block-library');
+ * Then, you might filter 'style_loader_tag' to add rel="preload" and an onload handler for those specific handles.
+ * 3. Ensure critical CSS (for above-the-fold content) is inlined or loaded synchronously to prevent FOUC.
+ * Example of using Filament Group's loadCSS pattern:
+ * <link rel="stylesheet" href="/path/to/mystyles.css" media="print" onload="this.media='all'">
+ * <noscript><link rel="stylesheet" href="/path/to/mystyles.css"></noscript>
+ */
 
 
-function flash_theme_setup() {
-/*! 
-Add support for title tag
-*/
- add_theme_support('title-tag');
+/**
+ * Note on Image Lazy Loading:
+ * The original code contained commented-out custom functions for adding 'loading="lazy"' to images.
+ * WordPress 5.5+ automatically adds 'loading="lazy"' to images by default (controlled by 'wp_lazy_loading_enabled' filter).
+ * Custom functions are generally not needed for this anymore unless you require more specific logic
+ * or support for browsers that don't understand loading="lazy" (though this is rare now).
+ */
 
-    
-/*Register nav menus
-*/    
-register_nav_menus(array(
-        'main-menu' => __('Main Menu', 'flash-theme'),
-        'footer-menu' => __('Footer Menu', 'flash-theme')
-    ));
 
-    // Add support for post thumbnails
-    add_theme_support('post-thumbnails');
-}
-add_action('after_setup_theme', 'flash_theme_setup');
+/**
+ * Note on Deferring JavaScript:
+ * The original code had a commented-out 'defer_js' function using 'script_loader_tag'.
+ * For scripts you enqueue yourself via wp_enqueue_script(), the modern WordPress way (since 6.3)
+ * to add 'defer' or 'async' attributes is using wp_script_add_data():
+ *
+ * wp_enqueue_script( 'my-handle', 'path/to/script.js', [], '1.0', true ); // true for footer
+ * wp_script_add_data( 'my-handle', 'strategy', 'defer' );
+ *
+ * For modifying scripts enqueued by third-party plugins or themes, the 'script_loader_tag' filter
+ * is still valid, but ensure the logic for adding the attribute is correct (modifying the tag, not the URL).
+ */
 
-// Enqueue styles and scripts
-function flash_theme_enqueue_styles() {
-    wp_enqueue_style('flash-theme-style', get_stylesheet_uri());
-    wp_enqueue_script('fade-transition', get_template_directory_uri() . '/fade-transition.js', array(), null, true);
-}
-add_action('wp_enqueue_scripts', 'flash_theme_enqueue_styles');
+// --- End of WordPress Optimizations & Hardening ---
 
-// Register widget area
-function flash_theme_widgets_init() {
-    register_sidebar(array(
-        'name' => __('Homepage Widget Area', 'flash-theme'),
-        'id' => 'homepage-widget-area',
-        'before_widget' => '<div class="widget">',
-        'after_widget' => '</div>',
-        'before_title' => '<h2 class="widget-title">',
-        'after_title' => '</h2>',
-    ));
-}
-add_action('widgets_init', 'flash_theme_widgets_init');
+// You can add other theme-specific functions below.
+
+?>
