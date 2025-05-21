@@ -73,8 +73,8 @@ function flash_theme_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
     register_nav_menus([
-        'main-menu'   => __('Main Menu', 'flash-theme'),
-        'footer-menu' => __('Footer Menu', 'flash-theme'),
+        'main-menu'   => __('Main Menu', 'Vofa'),
+        'footer-menu' => __('Footer Menu', 'Vofa'),
     ]);
 }
 add_action('after_setup_theme', 'flash_theme_setup');
@@ -109,13 +109,10 @@ function open_sans_font_loader() {
     wp_enqueue_script('webfontloader', 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js', [], '1.6.28', true);
 
     wp_add_inline_script('webfontloader', '
-        if (!sessionStorage.fontsLoaded) {
-            WebFont.load({
-                google: { families: ["Open+Sans:400,700&display=swap"] },
-                active: function() { sessionStorage.fontsLoaded = true; },
-                inactive: function() { console.warn("Font loading failed."); }
-            });
-        }
+        WebFont.load({
+            google: { families: ["Open+Sans:400,700&display=swap"] },
+            inactive: function() { console.warn("Font loading failed."); }
+        });
     ');
 }
 add_action('wp_enqueue_scripts', 'open_sans_font_loader');
@@ -125,7 +122,7 @@ add_action('wp_enqueue_scripts', 'open_sans_font_loader');
 -----------------------------------*/
 function flash_theme_widgets_init() {
     register_sidebar([
-        'name'          => __('Homepage Widget Area', 'flash-theme'),
+        'name'          => __('Homepage Widget Area', 'Vofa'),
         'id'            => 'homepage-widget-area',
         'before_widget' => '<div class="widget">',
         'after_widget'  => '</div>',
@@ -166,9 +163,7 @@ function flash_async_defer_scripts($tag, $handle, $src) {
     );
 
     // Add handles you want to async
-    $async_scripts = array(
-        'loadcss',
-    );
+    $async_scripts = array();
 
     // Skip jQuery or any critical scripts
     if (in_array($handle, array('jquery'))) {
@@ -189,4 +184,3 @@ function flash_async_defer_scripts($tag, $handle, $src) {
     return $tag;
 }
 add_filter('script_loader_tag', 'flash_async_defer_scripts', 10, 3);
-
