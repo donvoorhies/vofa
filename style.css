@@ -7,18 +7,32 @@ Description: A lightweight, fast, responsive and no-fuss theme for your WordPres
 Version: 1.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: flash-theme
+Text Domain: Vofa
 */
 
 /* Basic Styles */
 html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 html,body{height:100%;margin:0}
+/* Developer Review Note: The current layout uses 'width: 95%; max-width: 100%;' for several main elements.
+   This makes the content area always 95% of the viewport width.
+   Consider if a fixed max-width (e.g., 'max-width: 1200px;') with 'width: 100%;' and 'margin: 0 auto;'
+   would be more appropriate for a centered, fixed-width content area on larger screens.
+   This change would affect the overall site appearance and should be reviewed based on design requirements.
+*/
 body{font:16px 'Open Sans',Arial,sans-serif;margin:0 auto;padding:0;line-height:1.6;color:#333;background-color:#FFF;width:95%;max-width:100%}
-/*
-The following selector is to remove the header/page-headline on the start-page (HINT:display:none); 
-if something simlar is desired done on your start-page, find the id-number which your start-page has gotten allocated, and use this id-number instead in the 
-"page-id-18"-attribute... */
-body.page-id-18 main header{display:none}
+/* To hide the main header on a specific page (e.g., the front page):
+   1. Add a custom CSS class like 'hide-main-header' to that page via the WordPress editor's Page Attributes > Additional CSS Class(es) section.
+   2. Then, uncomment and use the following CSS rule, or add it to your child theme's stylesheet:
+body.hide-main-header main header {
+    display: none;
+}
+*/
+/* body.page-id-18 main header{display:none} */
+/* Rule from original header styles: Hide header on page ID 26 */
+/* Consider using a custom class for this as well, similar to 'hide-main-header' */
+body.page-id-26 main header {
+    display: none;
+}
 
 /* Fade Transition Styles */
 body.fade-out{opacity:0;transition:opacity 0.5s ease-in-out}
@@ -58,11 +72,9 @@ p input.wpcf7-submit{width:95px}
 
 /*Embedded media 'n' stuff*/
 img{border:0;height:auto;max-width:100%} 
-/* Remeber to plot in the IMG-file's width! */
 
-iframe{width:100%,max-width:100%}
+iframe{width:100%;max-width:100%}
 
-/* Remeber to add 'class="yt"' in the iframe-tag using a HTML-block in Guttenberg! */
 iframe.yt,video{aspect-ratio:16 / 9;height:100%;width:100%;max-width:100%;margin:0 auto}
 
 /* Sidebar Styles */
@@ -98,7 +110,7 @@ header{background-color:#FFF;color:#333;padding:1rem 0;text-align:center;positio
 figcaption.wp-element-caption{text-align:center;font-size:0.75em}
 /* Programa tical-magic that makes the nav-bar vanish and gets the hamburger menu to appear on small-screens (along with the help of jQuery and some plugin-code)! */
 div#menu{border:1px solid #333}
-#menu, #menu a, nav ul li a{display:block;width:45px;height:45px;line-height:45px;float:rtion.ight;font-size:2em;z-index:1000;text-align:left}
+#menu, #menu a, nav ul li a{display:block;width:45px;height:45px;line-height:45px;float:right;font-size:2em;z-index:1000;text-align:left}
 #menu a:hover, nav ul li a:hover{color:#FFF;background:#000}
 #menu,#menu a{text-align:center}
 nav{display:none;text-align:left}
