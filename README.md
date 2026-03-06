@@ -55,3 +55,7 @@ Lightweight classic WordPress theme focused on speed, clarity, and minimal setup
 ## License
 
 GPL-2.0-or-later
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
