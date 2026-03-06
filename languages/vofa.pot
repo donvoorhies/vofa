@@ -1,0 +1,111 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Vofa 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-06 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: vofa\n"
+
+#: 404.php:6
+msgid "Page not found"
+msgstr ""
+
+#: 404.php:8
+msgid "Sorry, the page you are looking for could not be found."
+msgstr ""
+
+#: 404.php:9
+msgid "Try a search instead:"
+msgstr ""
+
+#: archive.php:21 comments.php:28 index.php:16 search.php:27
+msgid "Previous"
+msgstr ""
+
+#: archive.php:22 comments.php:29 index.php:17 search.php:28
+msgid "Next"
+msgstr ""
+
+#: archive.php:28
+msgid "Nothing found"
+msgstr ""
+
+#: archive.php:30
+msgid "There are no posts to show in this archive yet."
+msgstr ""
+
+#: comments.php:12
+#, php-format
+msgid "%1$s comment"
+msgid_plural "%1$s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:35
+msgid "Leave a comment"
+msgstr ""
+
+#: footer.php:5
+msgid "All rights reserved."
+msgstr ""
+
+#: front-page.php:19 page.php:19
+msgid "Sorry, no page content was found!"
+msgstr ""
+
+#: functions.php:84
+msgid "Main Menu"
+msgstr ""
+
+#: functions.php:85
+msgid "Footer Menu"
+msgstr ""
+
+#: functions.php:136
+msgid "Homepage Widget Area"
+msgstr ""
+
+#: functions.php:144
+msgid "Sidebar"
+msgstr ""
+
+#: index.php:21
+msgid "Sorry, no posts matched your criteria."
+msgstr ""
+
+#: search.php:9
+#, php-format
+msgid "Search results for: %s"
+msgstr ""
+
+#: search.php:34
+msgid "No results found"
+msgstr ""
+
+#: search.php:36
+msgid "Try searching with different keywords."
+msgstr ""
+
+#: searchform.php:6
+msgid "Search for:"
+msgstr ""
+
+#: searchform.php:8
+msgctxt "placeholder"
+msgid "Search …"
+msgstr ""
+
+#: searchform.php:9
+msgid "Search"
+msgstr ""
+
+#: single.php:19
+msgid "Sorry, no post was found!"
+msgstr ""
+

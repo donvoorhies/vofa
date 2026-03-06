@@ -8,10 +8,15 @@
 <!--By: <?php the_author(); ?>-->
 </header>
 <?php the_content(); ?>
+<?php wp_link_pages(); ?>
+
+<?php if (comments_open() || get_comments_number()) : ?>
+<?php comments_template(); ?>
+<?php endif; ?>
 </article>
 <?php endwhile; else : ?>
 <article>
-<p>Sorry, no post was found!</p>
+<p><?php esc_html_e('Sorry, no post was found!', 'vofa'); ?></p>
 </article>
 <?php endif; ?>
 </section>
