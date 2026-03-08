@@ -1,3 +1,12 @@
+# ## [1.2.0] - 2026-03-08
+#
+# ### Added
+# - `theme.json` — defines colour palette, typography scale, content width and layout for Gutenberg
+# - `editor-style.css` — mirrors frontend typography and layout inside the block editor
+# - Block CSS in `style.css` — styles for all core blocks: alignments, image, quote, pullquote, separator, buttons, columns, cover, code, table, gallery
+#
+# ### Changed
+# - `functions.php` — added `align-wide`, `responsive-embeds`, `editor-styles` theme support
 # Changelog
 
 All notable changes to this project are documented in this file.

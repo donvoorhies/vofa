@@ -81,6 +81,12 @@ function flash_theme_setup() {
         'script',
     ]);
 
+    // Gutenberg block editor support
+    add_theme_support( 'align-wide' );
+    add_theme_support( 'responsive-embeds' );
+    add_theme_support( 'editor-styles' );
+    add_editor_style( 'editor-style.css' );
+
     register_nav_menus([
         'main-menu'   => __('Main Menu', 'vofa'),
         'footer-menu' => __('Footer Menu', 'vofa'),

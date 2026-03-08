@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "palette": [
+        { "name": "White", "slug": "white", "color": "#ffffff" },
+        { "name": "Black", "slug": "black", "color": "#000000" },
+        { "name": "Dark Grey", "slug": "dark-grey", "color": "#333333" },
+        { "name": "Accent", "slug": "accent", "color": "#005177" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        { "fontFamily": "'Open Sans', Arial, sans-serif", "slug": "open-sans", "name": "Open Sans" }
+      ],
+      "fontSizes": [
+        { "name": "Small", "slug": "small", "size": "14px" },
+        { "name": "Normal", "slug": "normal", "size": "16px" },
+        { "name": "Large", "slug": "large", "size": "2rem" },
+        { "name": "X-Large", "slug": "x-large", "size": "2.5rem" }
+      ],
+      "lineHeight": 1.6,
+      "dropCap": false
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1400px"
+    },
+    "background": {
+      "color": "#ffffff"
+    },
+    "border": {
+      "color": "#cccccc"
+    },
+    "link": {
+      "color": "#000000"
+    }
+  }
+}
