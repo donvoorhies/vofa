@@ -30,7 +30,8 @@
 <p><?php esc_html_e('There are no posts to show in this archive yet.', 'vofa'); ?></p>
 </article>
 <?php endif; ?>
-</section><?php get_sidebar(); ?>
+</section>
+<?php get_sidebar(); ?>
 <div class="push"></div>
 </main>
 <?php get_footer(); ?>

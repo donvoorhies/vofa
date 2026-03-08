@@ -8,8 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(event) {
             const href = link.getAttribute('href');
 
-            // Check if the link is an internal link
-            if (href && href.startsWith(window.location.origin)) {
+            // Ignore clicks that should not be hijacked (new tab, downloads, hash-only links, modifier keys).
+            if (!href || href.startsWith('#') || link.target === '_blank' || link.hasAttribute('download') || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+                return;
+            }
+
+            // Resolve relative URLs and only animate same-origin page navigations.
+            const url = new URL(href, window.location.href);
+            if (url.origin === window.location.origin) {
                 event.preventDefault(); // Prevent the default link behavior
 
                 // Add fade-out class to body
@@ -17,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Wait for the fade-out effect to finish, then navigate to the new page
                 setTimeout(function() {
-                    window.location.href = href;
+                    window.location.href = url.href;
                 }, 500); // Duration should match the CSS transition duration
             }
         });

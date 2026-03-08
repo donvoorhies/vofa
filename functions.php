@@ -44,6 +44,7 @@ add_filter('xmlrpc_methods', function ($methods) {
     unset($methods['pingback.ping']);
     return $methods;
 });
+// Hooking both filters prevents pingback URL output in different bloginfo() code paths.
 function disable_pingback_url($output, $show = '') {
     return $show === 'pingback_url' ? '' : $output;
 }
@@ -156,7 +157,7 @@ add_action('widgets_init', 'flash_theme_widgets_init');
  * Usage: Use script handle names in the arrays to control behavior.
  */
 function flash_async_defer_scripts($tag, $handle, $src) {
-    // Do not modify for logged-in users (admin or customizer)
+    // Keep original tags for logged-in users to avoid customizer/admin script regressions.
     if (is_user_logged_in()) {
         return $tag;
     }

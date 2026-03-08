@@ -1,4 +1,5 @@
 <?php
+// WordPress convention: do not expose comments until the correct post password is provided.
 if (post_password_required()) {
     return;
 }

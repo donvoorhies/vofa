@@ -37,7 +37,8 @@ printf(
 <?php get_search_form(); ?>
 </article>
 <?php endif; ?>
-</section><?php get_sidebar(); ?>
+</section>
+<?php get_sidebar(); ?>
 <div class="push"></div>
 </main>
 <?php get_footer(); ?>

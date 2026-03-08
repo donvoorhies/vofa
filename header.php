@@ -6,8 +6,6 @@
 	<link rel="preconnect" href="https://cdnjs.cloudflare.com/">
 	<link rel="preconnect" href="https://fonts.googleapis.com/">
 	<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>	
-<noscript>
-</noscript>
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -20,7 +18,6 @@
 <h1><a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a></h1>
 <?php endif; ?>
 <div class="cf"></div>
-<!--<p><?php bloginfo('description'); ?></p>-->
 </header>
 <nav>
 <?php wp_nav_menu(array('theme_location' => 'main-menu')); ?>

@@ -1,4 +1,5 @@
 <?php
+// Unique IDs keep label/input pairing valid when multiple search forms are rendered on one page.
 $unique_id = wp_unique_id('search-form-');
 ?>
 <form role="search" method="get" class="search-form" action="<?php echo esc_url(home_url('/')); ?>">

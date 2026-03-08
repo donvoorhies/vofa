@@ -1,11 +1,10 @@
 <?php get_header(); ?>
-<main>
+<main class="wrap">
 <section class="content-area content-thin">
-<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 <article class="article-full">
 <header>
 <h2><?php the_title(); ?></h2>
-<!--By: <?php the_author(); ?>-->
 </header>
 <?php the_content(); ?>
 <?php wp_link_pages(); ?>
@@ -19,7 +18,8 @@
 <p><?php esc_html_e('Sorry, no page content was found!', 'vofa'); ?></p>
 </article>
 <?php endif; ?>
-</section><?php get_sidebar(); ?>
+</section>
+<?php get_sidebar(); ?>
 <div class="push"></div>
 </main>
 <?php get_footer(); ?>
