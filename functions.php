@@ -3,9 +3,6 @@
  * Theme Optimization and Hardening
  */
 
-/*----------------------------------
- # SECURITY / PERFORMANCE OPTIMIZATIONS
------------------------------------*/
 
 /* Remove SSL capability test */
 remove_filter('atom_service_url','atom_service_url_filter');
