@@ -5,6 +5,7 @@
 <article class="article-full">
 <header>
 <h2><?php the_title(); ?></h2>
+<?php vofa_posted_on(); ?>
 </header>
 <?php the_content(); ?>
 <?php wp_link_pages(); ?>

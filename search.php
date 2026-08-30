@@ -17,6 +17,7 @@ printf(
 <article <?php post_class('article-full'); ?>>
 <header>
 <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+<?php vofa_posted_on(); ?>
 </header>
 <?php the_excerpt(); ?>
 </article>

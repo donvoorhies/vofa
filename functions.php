@@ -133,6 +133,21 @@ function open_sans_font_loader() {
 add_action('wp_enqueue_scripts', 'open_sans_font_loader');
 
 /*----------------------------------
+ # POST META
+-----------------------------------*/
+function vofa_posted_on() {
+    $published_iso = get_the_date(DATE_W3C);
+    $published_date = get_the_date();
+
+    printf(
+        '<div class="post-meta"><time class="entry-date published" datetime="%1$s">%2$s %3$s</time></div>',
+        esc_attr($published_iso),
+        esc_html__('Posted', 'vofa'),
+        esc_html($published_date)
+    );
+}
+
+/*----------------------------------
  # WIDGETS
 -----------------------------------*/
 function flash_theme_widgets_init() {

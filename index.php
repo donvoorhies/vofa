@@ -6,6 +6,7 @@
                 <article <?php post_class('article-full'); ?>>
                     <header>
                         <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                        <?php vofa_posted_on(); ?>
                     </header>
                     <?php the_excerpt(); ?>
                 </article>

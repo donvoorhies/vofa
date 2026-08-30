@@ -197,6 +197,10 @@ main article p {margin-bottom:1rem}
 main section article header{border-bottom:0 none}
 article.article-full header {width:100%;max-width:100%}
 
+/* Post publication date */
+.post-meta{margin:-0.45rem 0 1rem;color:#666;font-size:0.9rem;line-height:1.4}
+.post-meta time{font:inherit;color:inherit}
+
 
 /*For forms used - and the like*/
 input,textarea{width:95%;max-width:100%; margin:0 auto}
