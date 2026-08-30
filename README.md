@@ -29,6 +29,9 @@ Lightweight classic WordPress theme focused on speed, clarity, and minimal setup
 - `404.php`
 - `comments.php`
 - `searchform.php`
+ 
+## Recent changes — August 2026
+- Publication dates added to News posts 
 
 ## Recent Changes (March 2026)
 
